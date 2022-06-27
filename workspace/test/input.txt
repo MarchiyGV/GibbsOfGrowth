@@ -1,0 +1,12 @@
+variable pot_path index potentials
+variable potname index GB_potential_AgNi.txt
+variable potname_pure index GB_potential_AgNi_pure.txt
+variable element1 index Ag
+variable element2 index Ni
+
+variable T_init equal 10
+variable T equal 600
+variable berendsen_relax_steps_init equal 20000
+variable berendsen_relax_steps equal 180000
+
+variable dt_BR equal 0.001
