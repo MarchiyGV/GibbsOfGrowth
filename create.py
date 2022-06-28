@@ -25,22 +25,39 @@ with Popen(task.split(), stdout=PIPE, bufsize=1, universal_newlines=True) as p:
     for line in p.stdout:
         if "lattice found" in  line:
             exitflag = True
-        elif "dumpfile" in line:
-            dumpfile = (line.replace('dumpfile ', '')).replace('\n', '')
-        if not args.verbose:
-            if '!' in line:
-                print(line.replace('!', ''), end='')
-        else:
+        if '!!' in line:
+            s = line.replace('!!', '')
+            s = s.replace('%', "'")
+            exec(s)
+            print(s, end='')
+        elif (not args.verbose) and ('!' in line):
+            print(line.replace('!', ''), end='')
+        elif args.verbose:
             print(line, end='')   
                 
 if not exitflag:
     raise ValueError('Error in LAMMPS')
 
-print('done\ncreating polycrystal...')
-
 atmsk_path = f'../workspace/{args.name}/tmp_atomsk'
 Path(atmsk_path).mkdir(exist_ok=True)
 os.chdir(atmsk_path)
+
+print('done\ncreating lattice seed...')
+
+task = f'atomsk --create {lat} {a0} {element1} lammps -overwrite'
+print(task)
+with Popen(task.split(), stdout=PIPE, stdin=PIPE, bufsize=1, universal_newlines=True) as p:
+    for line in p.stdout:
+        if args.verbose:
+            print(line, end='')  
+        elif 'ERROR' in line:
+            print(line)
+shutil.move(f'{element1}.lmp', f'../dat/{element1}.dat')
+print('done\n')
+print('All done')
+
+print('done\ncreating polycrystal...')
+
 Lx, Ly, Lz = 100, 100, 100
 N = 10
 fname = 'polycrystal.txt'
@@ -53,7 +70,8 @@ with open(fname, 'w') as f:
 
 exitflag = False
 
-task = f'atomsk --polycrystal ../dat/{dumpfile} {fname} {outname}.lmp -wrap -overwrite -nthreads {args.jobs}'
+task = f'atomsk --polycrystal ../dat/{element1}.dat {fname} {outname}.lmp -wrap -overwrite -nthreads {args.jobs}'
+print(task)
 with Popen(task.split(), stdout=PIPE, stdin=PIPE, bufsize=1, universal_newlines=True) as p:
     for line in p.stdout:
         if args.verbose:

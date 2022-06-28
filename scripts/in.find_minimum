@@ -101,9 +101,10 @@ if "${ecoh2} < ${ecoh1}" then &
 "variable lat string bcc" &
 "variable latnum equal 2"
 
-print "!ecoh ${ecoh}"
-print "!a0 ${a0}"
-print "!${lat}"
+print "!ecoh = ${ecoh}"
+print "!!a0 = ${a0}"
+print "!!lat = %${lat}%"
+print "!!element1 = %${element1}%"
 
 variable natoms delete
 variable natoms1 delete
@@ -117,9 +118,4 @@ variable teng2 delete
 variable length2 delete
 variable ecoh2 delete
 
-
-variable dat_path index ${path}/dat
-shell mkdir ../${dat_path}
-write_dump all cfg ../${dat_path}/${element1}.cfg mass type xs ys zs modify element ${element1} ${element2}
-print "dumpfile ${element1}.cfg"
 print "lattice found"

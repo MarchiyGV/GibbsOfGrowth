@@ -69,7 +69,7 @@ dump_modify 1 element ${element1}
 print "dumpfile ../${dump_path}/dump_0.cfg"
 ######################################
 # START
-velocity all create $(v_T_init*2) ${rnd_seed_BR} mom no rot no
+velocity all create 600 ${rnd_seed_BR} mom no rot no
 #fix NPT all npt temp ${T} ${T} $(100*dt) iso 0 0 $(1000.0*dt)
 fix NPT all press/berendsen iso 0.0 0.0 $(10000.0*dt) modulus 1000000
 fix NVT all nvt temp ${T_init} ${T} $(100*dt)
