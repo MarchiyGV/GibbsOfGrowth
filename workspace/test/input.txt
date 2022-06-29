@@ -10,3 +10,7 @@ variable berendsen_relax_steps_init equal 200000
 variable berendsen_relax_steps equal 200000
 
 variable dt_BR equal 0.001
+
+variable thermal_relax_steps equal 1000
+
+variable dt_TR equal 0.001
