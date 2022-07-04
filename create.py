@@ -52,14 +52,30 @@ with Popen(task.split(), stdout=PIPE, stdin=PIPE, bufsize=1, universal_newlines=
             print(line, end='')  
         elif 'ERROR' in line:
             print(line)
+
+Path(f'../dat').mkdir(exist_ok=True) 
 shutil.move(f'{element1}.lmp', f'../dat/{element1}.dat')
 print('done\n')
 print('All done')
 
 print('done\ncreating polycrystal...')
+N_flag = False
+L_flag = False
 
-Lx, Ly, Lz = 100, 100, 100
-N = 10
+with open(f'../input.txt') as f:
+    for line in f:
+        if 'N_grains' in line:
+            N = int(line.split()[-1])
+            N_flag = True
+            print('N_grains:', N)
+        elif 'L_poly' in line:
+            Lx, Ly, Lz = map(float, line.split()[-3:])
+            L_flag = True
+            print('Lx, Ly, Lz:', Lx, Ly, Lz)
+
+if (not N_flag) or (not L_flag):
+    raise ValueError('can not find N_grains and L_poly in input.txt')
+
 fname = 'polycrystal.txt'
 file = f"""
 box {Lx} {Ly} {Lz}
@@ -86,4 +102,21 @@ with Popen(task.split(), stdout=PIPE, stdin=PIPE, bufsize=1, universal_newlines=
         '''
 shutil.move(f'{outname}.lmp', f'../dat/{outname}.dat')
 print('done\n')
+
+datfile = f'{outname}.dat'
+flag = False
+output = ''
+with open('../conf.txt', 'r') as f :
+    for line in f:
+        if 'init' in line:
+            line = f'init {datfile}\n'
+            flag=True
+            print(line)
+            output += line
+    if not flag:
+        output += f'init {datfile}\n'
+
+    with open('../conf.txt', 'w') as f:
+        f.write(output)
+
 print('All done')
