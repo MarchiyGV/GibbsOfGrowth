@@ -14,7 +14,8 @@ parser.add_argument("-v", "--verbose", default=False, action='store_true', requi
 parser.add_argument("-p", "--plot", default=False, action='store_true', required=False, help='only plot graphics')
 parser.add_argument("-m", "--mean-width", dest='mean_width', required=False, default=50, type=int)
 parser.add_argument("--min-grain", dest='min_grain', required=False, default=1000, type=int)
-parser.add_argument("--dump-step", dest='dump_step', required=False, default=5, type=int)
+parser.add_argument("--dump-step", dest='dump_step', required=False, type=int)
+parser.add_argument("--offset", required=False, type=int, default=0)
 args = parser.parse_args()
 
 os.chdir('scripts')
@@ -35,7 +36,7 @@ if not args.plot:
     task = f'{lmp} -in in.thermal_relax -var name {args.name} -var structure_name {structure} -sf omp -pk omp {args.jobs}'
     exitflag = False
     db_flag = False
-    db = 0
+    db = []
 
     print('starting LAMMPS...')
     print(task)
@@ -44,8 +45,8 @@ if not args.plot:
         print('\n')
         for line in p.stdout:
             if "Dangerous builds" in  line:
-                db = int(line.split()[-1])
-                if db>0:
+                db.append(int(line.split()[-1]))
+                if db[-1]>0:
                     db_flag = True
             elif "dumpfile" in line:
                 dumpfile = (line.replace('dumpfile ', '')).replace('\n', '')

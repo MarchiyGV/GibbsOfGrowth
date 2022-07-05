@@ -9,12 +9,13 @@ from set_lammps import lmp
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--name", required=True)
 parser.add_argument("-j", "--jobs", type=int, required=False, default=1)
+parser.add_argument("--offset", required=False, type=int, default=0)
 parser.add_argument("-s", "--structure", required=False)
 parser.add_argument("-v", "--verbose", default=False, action='store_true', required=False)
 parser.add_argument("-p", "--plot", default=False, action='store_true', required=False, help='only plot graphics')
 parser.add_argument("-m", "--mean-width", dest='mean_width', required=False, default=50, type=int)
 parser.add_argument("--min-grain", dest='min_grain', required=False, default=1000, type=int)
-parser.add_argument("--dump-step", dest='dump_step', required=False, default=5, type=int)
+parser.add_argument("--dump-step", dest='dump_step', required=False, type=int)
 args = parser.parse_args()
 
 os.chdir('scripts')
@@ -64,18 +65,20 @@ if not args.plot:
     print('done\n')
     print(f'WARNING!!!\nDengerous neighboor list buildings: {db}')
 
-with open(f'../workspace/{args.name}/conf.txt', 'r') as f :
-    for line in f:
-        if 'berendsen' in line:
-            line = f'berendsen {datfile}\n'
-            flag=True
-            print(line)
-            output += line
-    if not flag:
-        output += f'berendsen {datfile}\n'
+    output=''
+    flag = False
+    with open(f'../workspace/{args.name}/conf.txt', 'r') as f :
+        for line in f:
+            if 'berendsen' in line:
+                line = f'berendsen {datfile}\n'
+                flag=True
+                print(line)
+                output += line
+        if not flag:
+            output += f'berendsen {datfile}\n'
 
-    with open(f'../workspace/{args.name}/conf.txt', 'w') as f:
-        f.write(output)
+        with open(f'../workspace/{args.name}/conf.txt', 'w') as f:
+            f.write(output)
 
 print('plotting...')
 impath = f'../workspace/{args.name}/images'
