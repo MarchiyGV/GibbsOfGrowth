@@ -9,6 +9,7 @@ from set_lammps import lmp
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--name", required=True)
 parser.add_argument("-s", "--structure", required=False)
+parser.add_argument("-i", "--input", required=False, default='thermal_relax')
 parser.add_argument("-j", "--jobs", type=int, required=False, default=1)
 parser.add_argument("-v", "--verbose", default=False, action='store_true', required=False)
 parser.add_argument("-p", "--plot", default=False, action='store_true', required=False, help='only plot graphics')
@@ -74,7 +75,7 @@ from scripts.plot_thermal_relax import main as plot
 plot_args = parser.parse_args()
 plot_args.name = args.name
 plot_args.n = args.mean_width
-plot_args.inp = 'thermal_relax'
+plot_args.inp = args.input
 plot(plot_args)
 
 fname = f'../workspace/{args.name}/conf.txt'
