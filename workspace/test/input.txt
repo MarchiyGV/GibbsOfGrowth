@@ -10,7 +10,7 @@ variable L_poly index 100 100 100
 variable T_init equal 10
 variable T equal 300
 variable berendsen_relax_steps_init equal 100000
-variable berendsen_relax_steps equal 200000
+variable berendsen_relax_steps equal 500000
 
 variable dt_BR equal 0.001
 variable dump_step_BR equal 5000

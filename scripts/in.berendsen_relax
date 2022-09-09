@@ -76,7 +76,8 @@ fix NVT all nvt temp ${T_init} ${T} $(100*dt)
 run ${berendsen_relax_steps_init}
 
 unfix NVT
-fix NVT2 all nvt temp ${T} ${T} $(100*dt)
+group mobile type 1
+fix NVT2 mobile nvt temp ${T} ${T} $(100*dt)
 run ${berendsen_relax_steps}
 
 shell cd ../${path}/${dat}

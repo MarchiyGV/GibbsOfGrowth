@@ -1,1 +1,1 @@
-beendsen berendsen_relax_T600_steps200000.dat
+init polycrystall_fixed.dat
