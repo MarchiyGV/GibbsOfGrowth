@@ -65,7 +65,7 @@ print "##dt = ${dt}" file ${file} screen no
 print "#time; temp; press; pe" append ${file} screen no
 fix out all print ${thermo_step_BR} "$(time); $(temp); $(press); $(pe)" append ${file} screen no
 dump 1 all cfg ${dump_step_BR} ../${dump_path}/dump_*.cfg mass type xs ys zs
-dump_modify 1 element ${element1} ${element1} 
+dump_modify 1 element ${element1} Au 
 print "dumpfile ../${dump_path}/dump_0.cfg"
 ######################################
 # START
@@ -74,6 +74,10 @@ velocity all create 600 ${rnd_seed_BR} mom no rot no
 fix NPT all press/berendsen iso 0.0 0.0 $(10000.0*dt) modulus 1000000
 fix NVT all nvt temp ${T_init} ${T} $(100*dt)
 run ${berendsen_relax_steps_init}
+
+shell cd ../${path}/${dat}
+write_data init_${self}_T${T}_steps${berendsen_relax_steps_init}.dat
+shell cd ../../../${home} 
 
 unfix NVT
 group mobile type 1
